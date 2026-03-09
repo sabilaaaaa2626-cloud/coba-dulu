@@ -1,0 +1,281 @@
+```html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secret Game</title>
+
+<style>
+
+body{
+margin:0;
+overflow:hidden;
+font-family:Arial;
+background:black;
+color:white;
+text-align:center;
+}
+
+/* GALAXY */
+
+.stars{
+position:fixed;
+width:200%;
+height:200%;
+background:url("https://www.transparenttextures.com/patterns/stardust.png");
+animation:galaxy 120s linear infinite;
+}
+
+@keyframes galaxy{
+from{transform:translate(0,0)}
+to{transform:translate(-800px,-400px)}
+}
+
+/* INTRO */
+
+#intro{
+position:absolute;
+top:40%;
+width:100%;
+font-size:28px;
+animation:fade 3s;
+}
+
+@keyframes fade{
+from{opacity:0}
+to{opacity:1}
+}
+
+button{
+padding:12px 22px;
+font-size:18px;
+border:none;
+border-radius:10px;
+cursor:pointer;
+}
+
+/* HEART */
+
+.heart{
+position:absolute;
+font-size:40px;
+cursor:pointer;
+animation:fall 5s linear;
+}
+
+@keyframes fall{
+from{transform:translateY(-10vh)}
+to{transform:translateY(110vh)}
+}
+
+/* EXPLOSION */
+
+.explode{
+animation:boom 0.5s;
+}
+
+@keyframes boom{
+0%{transform:scale(1)}
+50%{transform:scale(2)}
+100%{opacity:0}
+}
+
+/* METEOR */
+
+.meteor{
+position:absolute;
+width:3px;
+height:60px;
+background:white;
+transform:rotate(45deg);
+animation:meteor 1s linear;
+}
+
+@keyframes meteor{
+from{transform:translateY(-100px) rotate(45deg)}
+to{transform:translateY(600px) rotate(45deg)}
+}
+
+/* YES NO */
+
+#yes,#no{
+position:absolute;
+font-size:20px;
+}
+
+#yes{background:#22c55e}
+#no{background:#ef4444}
+
+#ending{
+position:absolute;
+top:40%;
+width:100%;
+font-size:26px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="stars"></div>
+
+<audio id="introSound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+
+<div id="intro">
+<h1>🎬 A Tiny Secret Game</h1>
+<p>for someone special</p>
+<button onclick="start()">START</button>
+</div>
+
+<div id="game" style="display:none;">
+<h2>Tangkap 6 hati ❤️</h2>
+</div>
+
+<div id="question" style="display:none;">
+<h2>Apakah game ini seru?</h2>
+<button id="yes">YES</button>
+<button id="no">NO</button>
+</div>
+
+<div id="ending" style="display:none;">
+<p id="text"></p>
+</div>
+
+<script>
+
+let count=0
+
+function start(){
+
+document.getElementById("intro").style.display="none"
+document.getElementById("game").style.display="block"
+
+document.getElementById("introSound").play()
+
+spawnHeart()
+
+}
+
+/* HEART GAME */
+
+function spawnHeart(){
+
+let interval=setInterval(()=>{
+
+let heart=document.createElement("div")
+heart.innerHTML="❤️"
+heart.className="heart"
+
+heart.style.left=Math.random()*100+"%"
+
+heart.onclick=function(){
+
+heart.classList.add("explode")
+
+setTimeout(()=>heart.remove(),400)
+
+count++
+
+if(count>=6){
+
+clearInterval(interval)
+document.getElementById("game").style.display="none"
+showQuestion()
+
+}
+
+}
+
+document.body.appendChild(heart)
+
+},700)
+
+}
+
+/* METEOR */
+
+setInterval(()=>{
+
+let m=document.createElement("div")
+m.className="meteor"
+
+m.style.left=Math.random()*100+"%"
+
+document.body.appendChild(m)
+
+setTimeout(()=>m.remove(),1000)
+
+},1200)
+
+/* BUTTON ESCAPE */
+
+function showQuestion(){
+
+document.getElementById("question").style.display="block"
+
+const yes=document.getElementById("yes")
+const no=document.getElementById("no")
+
+function move(btn){
+
+btn.style.top=Math.random()*80+"%"
+btn.style.left=Math.random()*80+"%"
+
+}
+
+setInterval(()=>{
+
+move(yes)
+move(no)
+
+},400)
+
+yes.onclick=endGame
+no.onclick=endGame
+
+}
+
+/* ENDING */
+
+function endGame(){
+
+document.getElementById("question").style.display="none"
+document.getElementById("ending").style.display="block"
+
+const text=[
+"Selamat...",
+"kamu berhasil menyelesaikan game ini.",
+"tapi sebenarnya...",
+"dari awal kamu pasti menang.",
+"karena game ini dibuat...",
+"khusus untuk kamu.",
+"terima kasih sudah bermain 😊"
+]
+
+let i=0
+
+function show(){
+
+if(i<text.length){
+
+document.getElementById("text").innerHTML=text[i]
+
+i++
+
+setTimeout(show,2000)
+
+}
+
+}
+
+show()
+
+}
+
+</script>
+
+</body>
+</html>
+```
